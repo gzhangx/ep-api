@@ -10,8 +10,8 @@ exports.handler = async function (event) {
         return await func(event);
     }
     
-    console.log(`unknown action ${actionStr}`);
+    console.log(`unknown action ${action}`);
     return {        
-        error: `unknown action ${actionStr}`,
+        error: `unknown action ${action}`,
     };
 }

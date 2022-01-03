@@ -1,6 +1,6 @@
-const db = require('../utils/db');
-const authP = require('../utils/authProvider');
-async function auth(event) {
+import * as db from '../utils/db';
+import * as authP from '../utils/authProvider';
+export async function auth(event: any) {
 
     const { username, password } = event;
 
@@ -16,8 +16,4 @@ async function auth(event) {
 
     const signed = authP.signUser(user);
     return signed;
-}
-
-module.exports = {
-    auth,
 }

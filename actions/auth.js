@@ -1,14 +1,15 @@
-async function auth({ getPrm, stdErrRsp }) {
+const db = require('../utils/db');
+const authP = require('../utils/authProvider');
+async function auth(event) {
 
-    const username = getPrm('username');
-    const password = getprm('password');
+    const { username, password } = event;
 
     const user = await db.getOneByNameValuePairs('loginClients', [
         { name: 'username', value: username },
         { name: 'password', value: password },
     ]);
     if (!user) {
-        return stdErrRsp(`no user ${username}`);
+        return { error: `no user ${username}` };
     }
 
     console.log(user)

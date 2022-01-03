@@ -1,5 +1,5 @@
 
 
 module.exports = {
-    auth: require('./auth'),
+    ...require('./auth'),
 }

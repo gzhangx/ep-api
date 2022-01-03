@@ -141,8 +141,6 @@ async function test() {
     console.log(getoneres);
 }
 
-
-test();
 module.exports = {
     getAll,
     getAllByTable,

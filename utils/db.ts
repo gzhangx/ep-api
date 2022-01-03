@@ -2,10 +2,11 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-async function getAll(params, onData) {
+export function getAll(params, onData: (err, data) => void)
+{
     const onScan = (err, data) => {
         if (err) {
-            onData(err);
+            onData(err, null);
         } else {
             onData(err, data); //data.items            
             // continue scanning if we have more items
@@ -16,18 +17,20 @@ async function getAll(params, onData) {
             }
         }
     };
-    docClient.scan(params, onScan)
+    return docClient.scan(params, onScan)
 }
 
-async function getAllByTable(TableName, FilterExpression, ExpressionAttributeValues, onData) {
-    return getAll({
+
+export function getAllByTable(TableName: string, FilterExpression: string, ExpressionAttributeValues: object, onData: (err: any, data: any) => void)
+{
+    getAll({
         TableName,
         FilterExpression,
         ExpressionAttributeValues,
     }, onData);
 }
 
-async function getOneByName(TableName, name, value) {
+export async function getOneByName(TableName: string, name: string, value: string | number): Promise<object> {
     return new Promise((resolve, reject) => getAll({
         TableName,
         FilterExpression: `${name}=:name`,
@@ -40,11 +43,15 @@ async function getOneByName(TableName, name, value) {
     }));
 }
 
-async function getOneByNameValuePairs(TableName, pairs) {    
+export type DbQueryParams = {
+    name: string;
+    value: string | number;
+}
+export async function getOneByNameValuePairs(TableName: string, pairs: DbQueryParams[]): Promise<object> {
     return new Promise((resolve, reject) => getAll({
         TableName,
-        FilterExpression: pairs.map(p=>`${p.name}=:${p.name}`).join(' and '),
-        ExpressionAttributeValues: pairs.reduce((acc, p) => { 
+        FilterExpression: pairs.map(p => `${p.name}=:${p.name}`).join(' and '),
+        ExpressionAttributeValues: pairs.reduce((acc, p) => {
             acc[`:${p.name}`] = p.value;
             return acc;
         }, {}),
@@ -54,17 +61,17 @@ async function getOneByNameValuePairs(TableName, pairs) {
     }));
 }
 
-async function addData(TableName, Item) {
+export async function addData(TableName: string, Item: object): Promise<object> {
     return await docClient.put({
         TableName,
         Item
     }).promise();
 }
 
-async function updateData(TableName, id,
-    UpdateExpression,
-    ExpressionAttributeValues
-) {
+export async function updateData(TableName: string, id: string,
+    UpdateExpression: string,
+    ExpressionAttributeValues: object
+): Promise<object>{
     return await docClient.update({
         TableName,
         Key: { id },
@@ -74,7 +81,7 @@ async function updateData(TableName, id,
     }).promise();
 }
 
-async function deleteData(TableName, id) {
+export async function deleteData(TableName: string, id: string): Promise<object> {
     return await docClient.delete({
         TableName,
         Key: { id },
@@ -139,14 +146,4 @@ async function test() {
     const getoneres = await getOneByName('BusinessUser-kh7dnrwmljerze6banc6qglajq-staging', 'username', 'ericktest6');
     console.log('getoneres');
     console.log(getoneres);
-}
-
-module.exports = {
-    getAll,
-    getAllByTable,
-    addData,
-    updateData,
-    deleteData,
-    getOneByName,
-    getOneByNameValuePairs,
 }

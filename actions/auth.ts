@@ -7,7 +7,7 @@ export async function auth(event: any) {
     const user = await db.getOneByNameValuePairs('loginClients', [
         { name: 'username', value: username },
         { name: 'password', value: password },
-    ]);
+    ]) as authP.User;
     if (!user) {
         return { error: `no user ${username}` };
     }

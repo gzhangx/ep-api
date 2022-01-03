@@ -44,7 +44,7 @@ export function getPwdHash(pwd: string) {
         .digest('hex');
 }
 
-export function signUser(user: User) {
+export function signUser(user: User): HashedUser {
     return {
         ...user,
         hash: getUserHash(user)

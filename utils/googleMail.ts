@@ -16,7 +16,6 @@ export async function sendGoogleMail(to: string, subject: string, text: string) 
             rejectUnauthorized: false,
         },
     };
-    console.log(mailConfig);
     const transporter = mailer.createTransport(mailConfig)
 
 
@@ -30,9 +29,8 @@ export async function sendGoogleMail(to: string, subject: string, text: string) 
         },
         subject,
         text,
-    }
+    };
 
-    console.log(message)
     await transporter.sendMail(message)
     await transporter.close();
 }

@@ -24,12 +24,13 @@ export async function registerUser(event: any) {
         verified: false,
         active: true,
     };
-    //await db.addData('loginClients', userSave);
+    await db.addData('loginClients', userSave);
 
-    const subject = `Dear ${username}, your temp password is ${password}`;    
+    const subject = `Your login`;    
+    const text = `Dear ${username}, your temp password is ${password}`;    
     console.log(`sending email`);
     try {
-        await googleEmail.sendGoogleMail(username, subject, subject);        
+        await googleEmail.sendGoogleMail(username, subject, text);        
         return {
             id: userSave.id,
         };

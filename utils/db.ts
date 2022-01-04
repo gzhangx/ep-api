@@ -1,5 +1,4 @@
-const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
+const AWS = require('./awsSetup').getAWS();
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 export function getAll(params, onData: (err, data) => void)

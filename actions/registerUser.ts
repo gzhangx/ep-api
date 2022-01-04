@@ -35,9 +35,13 @@ export async function registerUser(event: any) {
         subject: `Dear ${username}, your temp password is ${password}`,
         Source: process.env.FROM_EMAIL,
     };
-    await awsEmail.sendEmail(emailData);
+    console.log(`sending email`);
+    console.log(emailData);
+    const result = await awsEmail.sendEmail(emailData);
+    console.log(result);
     return {
-        id:userSave.id,
+        id: userSave.id,
+        result,
     };
 }
 

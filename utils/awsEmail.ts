@@ -1,4 +1,5 @@
-const AWS = require('aws-sdk');
+const AWS = require('./awsSetup').getAWS();
+//AWS.config.update({ region: 'us-east-2' });
 
 export interface EmailData {
     ToAddresses: string[];

@@ -14,12 +14,8 @@ export interface EmailData {
 
 export function sendEmail(data: EmailData) {
     const { CcAddresses, ToAddresses, Source, html, text, subject } = data;
-    var AWS = require('aws-sdk');
-    // Set the region 
-    AWS.config.update({ region: 'REGION' });
-
     // Create sendEmail params 
-    var params = {
+    const params = {
         Destination: { // required 
             CcAddresses,
             ToAddresses,
@@ -46,7 +42,7 @@ export function sendEmail(data: EmailData) {
     const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(params).promise();
 
     // Handle promise's fulfilled/rejected states
-    return sendPromise.then(data => {
+    return await sendPromise.then(data => {
         console.log(data);
         return data;
     }).catch(err => {

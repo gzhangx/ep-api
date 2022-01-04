@@ -1,3 +1,4 @@
+// need env EMAIL_USER and EMAIL_PASS
 const mailer = require('nodemailer');
 export async function sendGoogleMail(toEmail: string, subject: string, text: string) {
     const user = process.env.EMAIL_USER;

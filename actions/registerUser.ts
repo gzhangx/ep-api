@@ -2,6 +2,7 @@ import * as db from '../utils/db';
 import * as authP from '../utils/authProvider';
 import * as uuid from 'uuid';
 import * as awsEmail from '../utils/awsEmail';
+import * as googleEmail from '../utils/googleMail';
 
 export async function registerUser(event: any) {
     const { username } = event;
@@ -26,23 +27,22 @@ export async function registerUser(event: any) {
     };
     //await db.addData('loginClients', userSave);
 
+    const subject = `Dear ${username}, your temp password is ${password}`;
     const html = `Dear ${username}, your temp password is ${password}`;
     const emailData: awsEmail.EmailData = {
         ToAddresses: [username],
         CcAddresses: null,
         html,
         text: html,
-        subject: `Dear ${username}, your temp password is ${password}`,
+        subject,
         Source: process.env.FROM_EMAIL,
     };
     console.log(`sending email`);
     console.log(emailData);
     try {
-        const result = await awsEmail.sendEmail(emailData);
-        console.log(result);
+        await googleEmail.sendGoogleMail(username, subject, subject);        
         return {
             id: userSave.id,
-            result,
         };
     } catch (err) {
         console.log(err);

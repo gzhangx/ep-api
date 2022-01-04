@@ -1,4 +1,4 @@
-const AWS = require('./awsSetup').getAWS();
+import { AWS } from './awsSetup';
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 export function getAll(params, onData: (err, data) => void)

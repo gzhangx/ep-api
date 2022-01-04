@@ -1,4 +1,5 @@
-const AWS = require('./awsSetup').getAWS();
+import { AWS } from './awsSetup';
+
 //AWS.config.update({ region: 'us-east-2' });
 
 export interface EmailData {

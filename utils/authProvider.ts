@@ -1,7 +1,7 @@
 import * as crypto from "crypto";
 import * as uuid from 'uuid';
 const secret = {
-    seed: uuid.v1(),
+    dynamicSeed: 'somethingUniqueThatCanChangeb1b171c1252',
     pwdSeed: 'somethingUniqueDontChange',
 }
 
@@ -16,12 +16,13 @@ export interface User {
     lastSignIn: string;
 }
 
-interface HashedObject {
+export interface HashedObject {
     hash: string,
+    nonce: string,
 }
 
-function getUserKey(user: User) {
-    return `${user.username}:${user.password}`;
+function getUserKey(user: User, nonce: string) {
+    return `${user.username}:${secret.dynamicSeed}:${nonce}`;
 }
 
 ///
@@ -29,10 +30,10 @@ function getUserKey(user: User) {
 //
 //
 ///
-function getUserHash(user: User) {
+function getUserHash(user: User, nonce:string) {
     return crypto
-        .createHmac('sha256', secret.seed)
-        .update(getUserKey(user))
+        .createHmac('sha256', secret.dynamicSeed)
+        .update(getUserKey(user, nonce))
         .digest('hex');
 }
 
@@ -44,13 +45,15 @@ export function getPwdHash(pwd: string) {
 }
 
 export function signUser(user: User): HashedObject {
+    const nonce = new Date().toISOString();
     return {
-        hash: getUserHash(user)
+        hash: getUserHash(user, nonce),
+        nonce,
     }
 }
 
-export function verifyUser(user: User, vhash: string) {
-    const hash = getUserHash(user);
-    return (vhash === hash)
+export function verifyUser(user: User, hash: HashedObject) {
+    const nhash = getUserHash(user, hash.nonce);
+    return (hash.hash === nhash)
 }
 

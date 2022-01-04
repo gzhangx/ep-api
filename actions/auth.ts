@@ -3,7 +3,7 @@ import * as authP from '../utils/authProvider';
 import * as dbAccess from '../utils/dbAccess';
 export async function auth(event: any) {
 
-    const { username, password } = event;
+    const { username, password,  } = event;
 
     const user = await db.getOneByNameValuePairs('loginClients', [
         { name: 'username', value: username },
@@ -29,4 +29,17 @@ export async function auth(event: any) {
 
     const signed = authP.signUser(user);
     return signed;
+}
+
+export function verifyAuth(event: any) {
+    const { loginInfo } = event;
+    if (!loginInfo) return false;
+    const { username, nonce, hash } = loginInfo;
+    const hashObj: authP.HashedObject = {
+        hash,
+        nonce,
+    };
+    return authP.verifyUser({
+        username,
+    } as authP.User, hashObj);
 }

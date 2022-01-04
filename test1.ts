@@ -15,7 +15,7 @@ async function test() {
     } as authP.User;
 
     const signed = authP.signUser(user);
-    const good = authP.verifyUser(user, signed.hash);
+    const good = authP.verifyUser(user, signed);
     console.log(signed);
     console.log(good)
 }

@@ -37,12 +37,19 @@ export async function registerUser(event: any) {
     };
     console.log(`sending email`);
     console.log(emailData);
-    const result = await awsEmail.sendEmail(emailData);
-    console.log(result);
-    return {
-        id: userSave.id,
-        result,
-    };
+    try {
+        const result = await awsEmail.sendEmail(emailData);
+        console.log(result);
+        return {
+            id: userSave.id,
+            result,
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            error: err.message
+        }
+    }
 }
 
 

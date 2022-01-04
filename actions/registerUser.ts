@@ -24,7 +24,7 @@ export async function registerUser(event: any) {
         verified: false,
         active: true,
     };
-    await db.addData('loginClients', userSave);
+    //await db.addData('loginClients', userSave);
 
     const html = `Dear ${username}, your temp password is ${password}`;
     const emailData: awsEmail.EmailData = {

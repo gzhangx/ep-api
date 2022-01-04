@@ -12,7 +12,7 @@ export interface EmailData {
     //ReplyToAddresses: string[];
 }
 
-export function sendEmail(data: EmailData) {
+export async function sendEmail(data: EmailData) {
     const { CcAddresses, ToAddresses, Source, html, text, subject } = data;
     // Create sendEmail params 
     const params = {

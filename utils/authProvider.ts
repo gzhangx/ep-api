@@ -5,12 +5,13 @@ const secret = {
     pwdSeed: 'somethingUniqueDontChange',
 }
 
-export class User {
+export interface User {
     id: string;
     username: string;
     password: string;
     provider: string;
     active: boolean;
+    verified: boolean;
     created: string;
     lastSignIn: string;
 }
@@ -18,8 +19,6 @@ export class User {
 interface HashedObject {
     hash: string,
 }
-
-export type HashedUser = User & HashedObject;
 
 function getUserKey(user: User) {
     return `${user.username}:${user.password}`;
@@ -44,15 +43,14 @@ export function getPwdHash(pwd: string) {
         .digest('hex');
 }
 
-export function signUser(user: User): HashedUser {
+export function signUser(user: User): HashedObject {
     return {
-        ...user,
         hash: getUserHash(user)
     }
 }
 
-export function verifyUser(user: HashedUser) {
+export function verifyUser(user: User, vhash: string) {
     const hash = getUserHash(user);
-    return (user.hash === hash)
+    return (vhash === hash)
 }
 

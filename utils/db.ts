@@ -81,6 +81,18 @@ export async function updateData(TableName: string, id: string,
     }).promise();
 }
 
+export async function updateDataByObject(tableName: string, id: string, data: object)
+    : Promise<object> {
+    const keys = Object.keys(data);
+    const updateFilters = keys.map(k=>`${k}=:${k}`)
+    const UpdateExpression: string = `set ${updateFilters.join(',')}`;
+    const ExpressionAttributeValues = keys.reduce((acc, k) => {
+        acc[`:${k}`] = data[k];
+        return acc;
+    }, {});
+    return updateData(tableName, id, UpdateExpression, ExpressionAttributeValues);
+}
+
 export async function deleteData(TableName: string, id: string): Promise<object> {
     return await docClient.delete({
         TableName,

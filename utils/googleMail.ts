@@ -1,6 +1,6 @@
 // need env EMAIL_USER and EMAIL_PASS
 const mailer = require('nodemailer');
-export async function sendGoogleMail(toEmail: string, subject: string, text: string) {
+export async function sendGoogleMail(to: string, subject: string, text: string) {
     const user = process.env.EMAIL_USER;
     const pass = process.env.EMAIL_PASS;
     const transporter = mailer.createTransport({
@@ -21,10 +21,10 @@ export async function sendGoogleMail(toEmail: string, subject: string, text: str
     const from = `${user}@gmail.com`;
     let message = {
         from, // listed in rfc822 message header
-        to: 'gzhangx@hotmail.com', // listed in rfc822 message header
+        to, // listed in rfc822 message header
         envelope: {
             from: `Daemon <${from}>`, // used as MAIL FROM: address for SMTP
-            to: toEmail // used as RCPT TO: address for SMTP
+            to // used as RCPT TO: address for SMTP
         },
         subject,
         text,

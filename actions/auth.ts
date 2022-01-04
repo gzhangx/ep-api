@@ -7,7 +7,7 @@ export async function auth(event: any) {
 
     const user = await db.getOneByNameValuePairs('loginClients', [
         { name: 'username', value: username },
-        { name: 'password', value: password },
+        //{ name: 'password', value: password },
     ]) as authP.User;
     if (!user) {
         return { error: `no user ${username}` };
@@ -16,6 +16,9 @@ export async function auth(event: any) {
         return { error: `You (${username}) are no longer active` };
     }
 
+    if (user.password !== authP.getPwdHash(password)) {
+        return { error: 'Invalid pwd' };
+    }
     if (!user.verified) {
         user.verified = true;
     }

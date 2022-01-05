@@ -16,10 +16,11 @@ exports.handler = async function (event) {
         };
     }
 
-    const { action } = JSON.parse(event.body);
+    const eventBody = JSON.parse(event.body);
+    const { action } = eventBody;
     const func = action && actions[action];
     if (func) {        
-        const result = await func(event);
+        const result = await func(eventBody);
         return {
             statusCode: 200,
             headers: {

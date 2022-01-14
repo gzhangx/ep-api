@@ -28,7 +28,7 @@ export async function registerUser(event: any) {
             active: true,
         };
         console.log('adding data ' + id)
-        await db.addData('loginClients', userSave);
+        await dbAccess.createUser(userSave);
 
         const subject = `Your login`;
         const text = `Dear ${username}, your temp password is ${password}`;

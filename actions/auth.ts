@@ -23,7 +23,7 @@ export async function auth(event: any) {
     if (!user.verified) {
         user.verified = true;
     }
-    await dbAccess.saveUser(user.id, {
+    await dbAccess.updateUser(user.id, {
         verified: true,
     })
     console.log(user)

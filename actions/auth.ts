@@ -1,6 +1,8 @@
 import * as db from '../utils/db';
 import * as authP from '../utils/authProvider';
 import * as dbAccess from '../utils/dbAccess';
+import * as uuid from 'uuid';
+import * as googleEmail from '../utils/googleMail';
 export async function auth(event: any) {
 
     const { username, password,  } = event;
@@ -43,4 +45,29 @@ export function verifyAuth(event: any) {
     return authP.verifyUser({
         username,
     } as authP.User, hashObj);
+}
+
+
+export async function resetPassword(event: any) {
+    const { username, } = event;
+    const user = await dbAccess.findUserByUserName(username);
+    if (!user) {
+        return { error: `no user ${username}` };
+    }
+    const id = uuid.v1();
+    const password = id.substr(0, 5);
+        
+            
+    await dbAccess.updateUser(user.id, {
+        password: authP.getPwdHash(password),
+    });
+
+    const subject = `Your Reset Password`;
+    const text = `Dear ${username}, your temp password is ${password}`;
+    console.log(`sending email`);
+    
+    await googleEmail.sendGoogleMail(username, subject, text);
+    return {
+        message: 'password reset',
+    }
 }

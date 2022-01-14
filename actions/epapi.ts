@@ -15,6 +15,8 @@ export async function epApiQuery(event) {
     let url = '';
     if (!formId) {
         url = baseUrl;
+    } else if (!currentPage) {
+        url = `${baseUrl}/${parseInt(formId)}`;
     } else {
         url = `${baseUrl}/${parseInt(formId)}/entries?sorting[key]=id&sorting[direction]=DESC&sorting[is_numeric]=true&paging[page_size]=${parseInt(pageSize || 20)}&paging[current_page]=${parseInt(currentPage || 1)}`;
     }
